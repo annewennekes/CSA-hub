@@ -31,6 +31,7 @@
 
     /* Header */
     .header{
+		overlflow: hidden;
       position: fixed; 
 	  inset: 0 0 auto 0;
       height: var(--header-height);
@@ -382,3 +383,4 @@ ul.breadcrumb li a:hover {
       .cards .card{ grid-column: span 12; }
 
     }
+
