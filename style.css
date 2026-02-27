@@ -1,18 +1,10 @@
-.header{
-    overflow: hidden;
-    position: fixed; 
+.header {
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: var(--header-height);
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: var(--gap);
-    padding: 10px 14px;
-    background: rgba(224, 224, 224, .19);
-    backdrop-filter: blur(10px);
-    white-space: nowrap;
-    border-bottom: 1px solid rgba(148,163,184,.15);
-    z-index: 1000;
+}
+
+.body {
+    margin-top: 60px; /* Adjust for header height */
 }
