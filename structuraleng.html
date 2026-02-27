@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CSA Hub v3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" role="banner">
+  
+  <button class="hamburger" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="true">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="4" y1="6"  x2="20" y2="6"/>
+    <line x1="4" y1="12" x2="20" y2="12"/>
+    <line x1="4" y1="18" x2="20" y2="18"/>
+  </svg>
+</button>
+	<a href="index.html">
+    <div class="logo">
+       <img src="images/CSA_Logo.svg" alt="CSA Hub logo" class="logo-img">
+    </div>
+	</a>
+
+    <div class="search-wrap" role="search" aria-label="Site search">
+     <form class="search" role="search" aria-label="Site search" onsubmit="event.preventDefault(); alert('Search submitted!');">
+      <input type="search" name="q" placeholder="Search…" aria-label="Search" />
+      <button type="submit">Search</button>
+    </form>
+      </form>
+    </div>
+
+    <div class="actions" aria-label="Header actions">
+      <button class="btn"><a href="https://hcm12preview.sapsf.eu/sf/home?bplte_company=C0001243135T&_s.crb=TbAo7NV%252fa3F4uUsBIttrttOBffZnYMof8LpopeRbWVc%253d" target="_blank">eLearning</a></button>
+      <button class="btn">Forum</button>
+      <button class="btn">FAQ</button>
+      <button class="btn primary">Suggestions</button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Section navigation">
+    <div class="nav-title">Navigation</div>
+    <ul class="nav">
+      <!-- General items -->
+      <li><a href="install.html">Installing CSA</a></li>
+	  <li class="dropdown">
+		<button class="dropdown-btn" aria-expanded="false">CSA Essentials
+		<span class="arrow">▼</span>
+		</button>
+		<ul class="dropdown-menu">
+		<li><a href="importexport.html">Import/Export</a></li>
+		<li><a href="2d3dviewer.html">2D/3D viewer</a></li>
+		<li><a href="zoom.html">Zoom</a></li>
+		<li><a href="navigation.html">Navigating around</a></li>
+		<li><a href="freezeunfreeze.html">Freeze/Unfreeze</a></li>
+		<li><a href="tagging.html">Tagging</a></li>
+		</ul>
+    	
+		 <li><a href="projectinformation.html">Project Information</a></li>
+		
+		<li class="dropdown">
+		<button class="dropdown-btn" aria-expanded="false">Palletrack (NR1)
+		<span class="arrow">▼</span>
+		</button>
+		<ul class="dropdown-menu">
+		<li><a href="nr1loadunit.html">Load Unit Editor</a></li>
+		<li><a href="nr1scheme.html">Scheme NR1</a></li>
+		<li><a href="nr1maincomponents.html">Main Components</a></li>
+		<li><a href="nr1accessoires">Accessoires</a></li>
+		<li><a href="nr1beamconfig.html">Beam Configurator</a></li>
+		</ul>
+		
+		<li class="dropdown">
+		<button class="dropdown-btn" aria-expanded="false">Shelving (SF1)
+		<span class="arrow">▼</span>
+		</button>
+		<ul class="dropdown-menu">
+		<li><a href="sf1loadunit.html">Load Unit Editor</a></li>
+		<li><a href="sf1scheme.html">Scheme SF1</a></li>
+		<li><a href="sf1maincomponents.html">Main Components</a></li>
+		<li><a href="sf1accessoires.html">Accessoires</a></li>
+		</ul>
+		
+		<li class="dropdown">		
+		<button class="dropdown-btn" aria-expanded="false">Shelving with floor (SF3)
+		<span class="arrow">▼</span>
+		</button>
+		<ul class="dropdown-menu">
+		<li><a href="sf3loadunit.html">Load Unit Editor</a></li>
+		<li><a href="sf3scheme.html">Scheme SF3</a></li>
+		<li><a href="sf3maincomponents.html">Main Components</a></li>
+		<li><a href="sf3accessoires.html">Accessoires</a></li>
+		</ul>
+
+        <li class="dropdown">
+		<button class="dropdown-btn" aria-expanded="false">Price calculation (BOM)
+		<span class="arrow">▼</span>
+		</button>
+		<ul class="dropdown-menu">
+		<li><a href="quote.html">Quote</a></li>
+		<li><a href="bom.html">BOM</a></li>
+		<li><a href="items.html">Adding items</a></li>
+		<li><a href="transport.html">Transport</a></li>
+		<li><a href="exportquote.html">Export quote</a></li>
+		<li><a href="installationtime.html">Installation time</a></li>
+		</ul>
+		
+		 <li><a href="structuraleng.html">Structural Engineering (RDS&tables)</a></li>
+		
+		<li class="dropdown">
+		<button class="dropdown-btn" aria-expanded="false">Output
+		<span class="arrow">▼</span>
+		</button>
+		<ul class="dropdown-menu">
+		<li><a href="paperview.html">PaperView</a></li>
+		<li><a href="elevations.html">Elevations</a></li>
+		<li><a href="quickrender.html">QuickRender</a></li>
+		<li><a href="3drenders.html">3D Renders</a></li>
+		</ul>
+			<li class="dropdown">
+		<button class="dropdown-btn" aria-expanded="false">NEDCON Internal
+		<span class="arrow">▼</span>
+		</button>
+		<ul class="dropdown-menu">
+		<li><a href="projectmanagement.html">Project Management</a></li>
+		<li><a href="installationmanagement.HTML">Installation Management</a></li>
+		<li><a href="installationcosts.html">Installation Material & costs</a></li>
+		</ul>
+    </ul>
+  </aside>
+
+  <!-- Main -->
+  <main class="main" role="main">
+	<ul class="breadcrumb">
+	<li><a href="index.html">Home</a></li>
+	<li>Installing CSA</li>
+  
+    <!-- Hero -->
+    <section class="hero" aria-label="Hero">
+      <!-- Replace with your own image or keep gradient-only -->
+      <img src="images/heroimage.jpg"" alt="Pallet rack" aria-hidden="true" />
+      <div class="hero-inner">
+	    <h1>Structural Engineering (RDS&tables)</h1>
+        <p>
+         RDS & Tables information 
+        </p>
+		<span class="eyebrow-advanced">Part of CSA Advanced</span>
+        </div>
+    </section>
+	
+   
+  </main>
+
+  <!-- (Optional) Tiny script for demo search alert; safe to remove -->
+  <script>
+ 
+// Sidebar toggle (collapses/expands the fixed sidebar)
+  const sidebar = document.querySelector('.sidebar');      // robust
+  const toggle  = document.getElementById('sidebarToggle'); // already in your HTML
+
+  function hideSidebar() {
+    sidebar.classList.add('is-hidden');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.classList.add('sidebar-collapsed');
+  }
+  function showSidebar() {
+    sidebar.classList.remove('is-hidden');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.classList.remove('sidebar-collapsed');
+  }
+
+  // Guard against missing elements
+  if (sidebar && toggle) {
+    toggle.addEventListener('click', () => {
+      const hidden = sidebar.classList.contains('is-hidden');
+      if (hidden) showSidebar(); else hideSidebar();
+    });
+
+    // Close sidebar with Escape, open with Ctrl/Cmd + B (like many apps)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hideSidebar();
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        const hidden = sidebar.classList.contains('is-hidden');
+        if (hidden) showSidebar(); else hideSidebar();
+      }
+    });
+  } else {
+    // Optional: log to help during development
+    console.warn('Sidebar or toggle button not found in the DOM.');
+  }
+
+// Dropdowns — independent toggle (no global close)
+document.querySelectorAll('.dropdown-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const menu = btn.nextElementSibling;
+    if (!menu) return; // guard
+
+    const isOpen = menu.classList.contains('show');
+
+    // Toggle only this dropdown
+    if (isOpen) {
+      menu.classList.remove('show');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    } else {
+      menu.classList.add('show');
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+
+  // Optional: keyboard support for accessibility
+  btn.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      btn.click();
+    }
+  });
+});
+
+
+  </script>
+</body>
+</html>
