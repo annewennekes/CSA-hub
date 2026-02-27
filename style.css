@@ -31,7 +31,7 @@
 
     /* Header */
     .header{
-      position: relative; 
+      position: fixed; 
 	  inset: 0 0 auto 0;
       height: var(--header-height);
       display: grid;
@@ -380,4 +380,5 @@ ul.breadcrumb li a:hover {
 
       .search-wrap{ order: 3; grid-column: 1 / -1; }
       .cards .card{ grid-column: span 12; }
+
     }
