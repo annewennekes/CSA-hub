@@ -22,7 +22,7 @@
        <img src="images/CSA_Logo.svg" alt="CSA Hub logo" class="logo-img">
     </div>
 
-    <div class="search-wrap" role="search" aria-label="Site search">
+    <div id="site-search" class="search-wrap" role="search" aria-label="Site search">
      <form class="search" role="search" aria-label="Site search" onsubmit="event.preventDefault(); alert('Search submitted!');">
       <input type="search" name="q" placeholder="Search…" aria-label="Search" />
       <button type="submit">Search</button>
@@ -278,9 +278,13 @@ document.querySelectorAll('.dropdown-btn').forEach((btn) => {
  * CONFIG: list the HTML files you want to search.
  * Paths are relative to the site root on GitHub Pages.
  */
+
 const FILES_TO_SEARCH = [
-  "index.html", "2d3dviewer.html", "3drender.html","bom.html", "elevations.html", 
-"exportquote.html",
+  "2d3dviewer.html",
+  "3drender.html",
+  "bom.html",
+  "elevations.html",
+  "exportquote.html",
   "freezeunfreeze.html",
   "importexport.html",
   "index.html",
@@ -313,167 +317,59 @@ const FILES_TO_SEARCH = [
   "tagging.html",
   "transport.html",
   "zoom.html"
-  // "subfolder/example.html"
 ];
 
-// --- Small helper: debounce to avoid too many fetches while typing ---
-function debounce(fn, delay = 300) {
-  let t;
-  return (...args) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn.apply(null, args), delay);
-  };
-}
-
-// --- Parse all <meta> tags from an HTML string ---
 function extractMetaContents(htmlString) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, "text/html");
-  const metas = Array.from(doc.getElementsByTagName("meta"));
-
-  const values = [];
-  for (const m of metas) {
-    // Common attributes that may hold searchable values
-    const name = (m.getAttribute("name") || "").trim();
-    const property = (m.getAttribute("property") || "").trim();
-    const content = (m.getAttribute("content") || "").trim();
-    const keywords = (m.getAttribute("keywords") || "").trim();
-
-    if (content) values.push(content);
-    if (keywords) values.push(keywords);
-    if (name) values.push(name);
-    if (property) values.push(property);
-  }
-  return values.map(v => v.toLowerCase());
+  return [...doc.getElementsByTagName("meta")]
+    .map(m => (m.getAttribute("content") || "").toLowerCase())
+    .filter(v => v);
 }
 
-// --- Render result list ---
-function renderResults(container, query, results) {
-  container.innerHTML = ""; // clear
-
-  const wrap = document.createElement("div");
-  wrap.className = "search-results-wrap";
-
-  const heading = document.createElement("h3");
-  heading.textContent = query
-    ? `Search results for: “${query}”`
-    : "Search";
-  wrap.appendChild(heading);
-
-  if (!query) {
-    container.appendChild(wrap);
-    return;
-  }
-
-  if (results.length === 0) {
-    const p = document.createElement("p");
-    p.textContent = "No matching pages found.";
-    wrap.appendChild(p);
-    container.appendChild(wrap);
-    return;
-  }
-
-  const ul = document.createElement("ul");
-  for (const r of results) {
-    const li = document.createElement("li");
-    const a = document.createElement("a");
-    a.href = r.path;
-    a.textContent = r.title || r.path;
-    a.setAttribute("aria-label", `Open ${a.textContent}`);
-    li.appendChild(a);
-
-    // Optional: show matched values (first few)
-    if (r.matches && r.matches.length) {
-      const small = document.createElement("div");
-      small.style.fontSize = "0.9em";
-      small.style.color = "#666";
-      small.textContent = `Matched meta: ${r.matches.slice(0, 3).join(", ")}`;
-      li.appendChild(small);
-    }
-
-    ul.appendChild(li);
-  }
-  wrap.appendChild(ul);
-  container.appendChild(wrap);
-}
-
-// --- Main search logic ---
 async function searchMeta(query) {
-  const q = query.trim().toLowerCase();
-  if (!q) return [];
-
+  const q = query.toLowerCase();
   const results = [];
 
-  // Fetch each file (same-origin on GitHub Pages)
   for (const path of FILES_TO_SEARCH) {
     try {
-      const res = await fetch(path, { cache: "reload" });
+      const res = await fetch(path);
       if (!res.ok) continue;
 
       const text = await res.text();
-
-      // Parse HTML to extract <meta> values
       const metaValues = extractMetaContents(text);
-
-      // Match if ANY meta value contains the query
       const matched = metaValues.filter(v => v.includes(q));
-      if (matched.length > 0) {
-        // Try to extract a <title> for display
-        let title = "";
-        try {
-          const doc = new DOMParser().parseFromString(text, "text/html");
-          title = (doc.querySelector("title")?.textContent || "").trim();
-        } catch {}
 
-        results.push({
-          path,
-          title,
-          matches: matched
-        });
+      if (matched.length) {
+        results.push({ path });
       }
-    } catch (err) {
-      console.warn("Search: failed to fetch", path, err);
-    }
+    } catch {}
   }
-
   return results;
 }
 
-// --- Wire up your existing form ---
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.querySelector('.search-wrap form.search');
-  const input = form?.querySelector('input[name="q"]');
+  const form = document.getElementById("site-search-form");
+  const input = form.querySelector("input[name='q']");
   const resultsEl = document.getElementById("search-results");
 
-  if (!form || !input || !resultsEl) return;
-
-  // Submit handler
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const query = input.value || "";
-    resultsEl.setAttribute("aria-busy", "true");
-    const results = await searchMeta(query);
-    renderResults(resultsEl, query, results);
-    resultsEl.removeAttribute("aria-busy");
+    const query = input.value.trim();
+    if (!query) return;
+
+    const found = await searchMeta(query);
+
+    resultsEl.innerHTML =
+      found.length === 0
+        ? "<p>No matching pages found.</p>"
+        : "<ul>" + found.map(f => `<li><a href="${f.path}">${f.path}</a></li>`).join("") + "</ul>";
   });
-
-  // Live search as you type (debounced)
-  const debounced = debounce(async () => {
-    const query = input.value || "";
-    resultsEl.setAttribute("aria-busy", "true");
-    const results = await searchMeta(query);
-    renderResults(resultsEl, query, results);
-    resultsEl.removeAttribute("aria-busy");
-  }, 300);
-
-  input.addEventListener("input", debounced);
 });
-
-
-
   </script>
 </body>
 </html>
+
 
 
 
