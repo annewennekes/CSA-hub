@@ -22,7 +22,7 @@
        <img src="images/CSA_Logo.svg" alt="CSA Hub logo" class="logo-img">
     </div>
 
-    <div id="site-search" class="search-wrap" role="search" aria-label="Site search">
+    <div class="search-wrap" role="search" aria-label="Site search">
      <form class="search" role="search" aria-label="Site search" onsubmit="event.preventDefault(); alert('Search submitted!');">
       <input type="search" name="q" placeholder="Search…" aria-label="Search" />
       <button type="submit">Search</button>
@@ -273,102 +273,10 @@ document.querySelectorAll('.dropdown-btn').forEach((btn) => {
   });
 });
 
-	  
-/**
- * CONFIG: list the HTML files you want to search.
- * Paths are relative to the site root on GitHub Pages.
- */
-
-const FILES_TO_SEARCH = [
-  "2d3dviewer.html",
-  "3drender.html",
-  "bom.html",
-  "elevations.html",
-  "exportquote.html",
-  "freezeunfreeze.html",
-  "importexport.html",
-  "index.html",
-  "install.html",
-  "installationcosts.html",
-  "installationmanagement.html",
-  "installationtime.html",
-  "items.html",
-  "navigation.html",
-  "nr1accessoires.html",
-  "nr1beamconfige.html",
-  "nr1loadunit.html",
-  "nr1maincomponents.html",
-  "nr1scheme.html",
-  "pagetemplate.html",
-  "paperview.html",
-  "projectinformation.html",
-  "projectmanagement.html",
-  "quickrender.html",
-  "quote.html",
-  "sf1accessoires.html",
-  "sf1loadunit.html",
-  "sf1maincomponents.html",
-  "sf1scheme.html",
-  "sf3accessoires.html",
-  "sf3loadunit.html",
-  "sf3maincomponents.html",
-  "sf3scheme.html",
-  "structuraleng.html",
-  "tagging.html",
-  "transport.html",
-  "zoom.html"
-];
-
-function extractMetaContents(htmlString) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, "text/html");
-  return [...doc.getElementsByTagName("meta")]
-    .map(m => (m.getAttribute("content") || "").toLowerCase())
-    .filter(v => v);
-}
-
-async function searchMeta(query) {
-  const q = query.toLowerCase();
-  const results = [];
-
-  for (const path of FILES_TO_SEARCH) {
-    try {
-      const res = await fetch(path);
-      if (!res.ok) continue;
-
-      const text = await res.text();
-      const metaValues = extractMetaContents(text);
-      const matched = metaValues.filter(v => v.includes(q));
-
-      if (matched.length) {
-        results.push({ path });
-      }
-    } catch {}
-  }
-  return results;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("site-search-form");
-  const input = form.querySelector("input[name='q']");
-  const resultsEl = document.getElementById("search-results");
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const query = input.value.trim();
-    if (!query) return;
-
-    const found = await searchMeta(query);
-
-    resultsEl.innerHTML =
-      found.length === 0
-        ? "<p>No matching pages found.</p>"
-        : "<ul>" + found.map(f => `<li><a href="${f.path}">${f.path}</a></li>`).join("") + "</ul>";
-  });
-});
-  </script>
+</script>
 </body>
 </html>
+
 
 
 
