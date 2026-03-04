@@ -22,13 +22,21 @@
        <img src="images/CSA_Logo.svg" alt="CSA Hub logo" class="logo-img">
     </div>
 
-    <div class="search-wrap" role="search" aria-label="Site search">
-     <form class="search" role="search" aria-label="Site search" onsubmit="event.preventDefault(); alert('Search submitted!');">
-      <input type="search" name="q" placeholder="Search…" aria-label="Search" />
-      <button type="submit">Search</button>
-    </form>
-      </form>
-    </div>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+<ul id="myUL">
+  <li><a href="#">2D 3D Viewer</a></li>
+  <li><a href="#">3D Render</a></li>
+
+  <li><a href="#">BOM</a></li>
+  <li><a href="#">Elevations</a></li>
+
+  <li><a href="#">Export quote</a></li>
+  <li><a href="#">Freeze</a></li>
+  <li><a href="#">Import</a></li>
+    <li><a href="#">Install</a></li>
+  <li><a href="#">Installation costs</a></li>
+</ul>
 	  
     <div class="actions" aria-label="Header actions">
       <button class="btn"><a href="https://hcm12preview.sapsf.eu/sf/home?bplte_company=C0001243135T&_s.crb=TbAo7NV%252fa3F4uUsBIttrttOBffZnYMof8LpopeRbWVc%253d" target="_blank">eLearning</a></button>
@@ -269,9 +277,41 @@ document.querySelectorAll('.dropdown-btn').forEach((btn) => {
   });
 });
 
+// Searchbar
+	  
+
+document.getElementById("myInput").addEventListener("focus", function () {
+    document.getElementById("myUL").style.display = "block";
+});
+
+function myFunction() {
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+
+    // Hide UL if input becomes empty again
+    if (input.value.trim() === "") {
+        ul.style.display = "none";
+        return;
+    }
+
+    ul.style.display = "block"; // show when typing
+
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        li[i].style.display = 
+            txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+    }
+}
+
+
 </script>
 </body>
 </html>
+
 
 
 
