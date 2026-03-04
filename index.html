@@ -29,6 +29,10 @@
     </form>
       </form>
     </div>
+	  
+<!-- Where results will be rendered -->
+<div id="search-results" aria-live="polite" aria-atomic="true"></div>
+
 
     <div class="actions" aria-label="Header actions">
       <button class="btn"><a href="https://hcm12preview.sapsf.eu/sf/home?bplte_company=C0001243135T&_s.crb=TbAo7NV%252fa3F4uUsBIttrttOBffZnYMof8LpopeRbWVc%253d" target="_blank">eLearning</a></button>
@@ -269,9 +273,207 @@ document.querySelectorAll('.dropdown-btn').forEach((btn) => {
   });
 });
 
+	  
+/**
+ * CONFIG: list the HTML files you want to search.
+ * Paths are relative to the site root on GitHub Pages.
+ */
+const FILES_TO_SEARCH = [
+  "index.html", "2d3dviewer.html", "3drender.html","bom.html", "elevations.html", 
+"exportquote.html",
+  "freezeunfreeze.html",
+  "importexport.html",
+  "index.html",
+  "install.html",
+  "installationcosts.html",
+  "installationmanagement.html",
+  "installationtime.html",
+  "items.html",
+  "navigation.html",
+  "nr1accessoires.html",
+  "nr1beamconfige.html",
+  "nr1loadunit.html",
+  "nr1maincomponents.html",
+  "nr1scheme.html",
+  "pagetemplate.html",
+  "paperview.html",
+  "projectinformation.html",
+  "projectmanagement.html",
+  "quickrender.html",
+  "quote.html",
+  "sf1accessoires.html",
+  "sf1loadunit.html",
+  "sf1maincomponents.html",
+  "sf1scheme.html",
+  "sf3accessoires.html",
+  "sf3loadunit.html",
+  "sf3maincomponents.html",
+  "sf3scheme.html",
+  "structuraleng.html",
+  "tagging.html",
+  "transport.html",
+  "zoom.html"
+  // "subfolder/example.html"
+];
+
+// --- Small helper: debounce to avoid too many fetches while typing ---
+function debounce(fn, delay = 300) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(null, args), delay);
+  };
+}
+
+// --- Parse all <meta> tags from an HTML string ---
+function extractMetaContents(htmlString) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, "text/html");
+  const metas = Array.from(doc.getElementsByTagName("meta"));
+
+  const values = [];
+  for (const m of metas) {
+    // Common attributes that may hold searchable values
+    const name = (m.getAttribute("name") || "").trim();
+    const property = (m.getAttribute("property") || "").trim();
+    const content = (m.getAttribute("content") || "").trim();
+    const keywords = (m.getAttribute("keywords") || "").trim();
+
+    if (content) values.push(content);
+    if (keywords) values.push(keywords);
+    if (name) values.push(name);
+    if (property) values.push(property);
+  }
+  return values.map(v => v.toLowerCase());
+}
+
+// --- Render result list ---
+function renderResults(container, query, results) {
+  container.innerHTML = ""; // clear
+
+  const wrap = document.createElement("div");
+  wrap.className = "search-results-wrap";
+
+  const heading = document.createElement("h3");
+  heading.textContent = query
+    ? `Search results for: “${query}”`
+    : "Search";
+  wrap.appendChild(heading);
+
+  if (!query) {
+    container.appendChild(wrap);
+    return;
+  }
+
+  if (results.length === 0) {
+    const p = document.createElement("p");
+    p.textContent = "No matching pages found.";
+    wrap.appendChild(p);
+    container.appendChild(wrap);
+    return;
+  }
+
+  const ul = document.createElement("ul");
+  for (const r of results) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = r.path;
+    a.textContent = r.title || r.path;
+    a.setAttribute("aria-label", `Open ${a.textContent}`);
+    li.appendChild(a);
+
+    // Optional: show matched values (first few)
+    if (r.matches && r.matches.length) {
+      const small = document.createElement("div");
+      small.style.fontSize = "0.9em";
+      small.style.color = "#666";
+      small.textContent = `Matched meta: ${r.matches.slice(0, 3).join(", ")}`;
+      li.appendChild(small);
+    }
+
+    ul.appendChild(li);
+  }
+  wrap.appendChild(ul);
+  container.appendChild(wrap);
+}
+
+// --- Main search logic ---
+async function searchMeta(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+
+  const results = [];
+
+  // Fetch each file (same-origin on GitHub Pages)
+  for (const path of FILES_TO_SEARCH) {
+    try {
+      const res = await fetch(path, { cache: "reload" });
+      if (!res.ok) continue;
+
+      const text = await res.text();
+
+      // Parse HTML to extract <meta> values
+      const metaValues = extractMetaContents(text);
+
+      // Match if ANY meta value contains the query
+      const matched = metaValues.filter(v => v.includes(q));
+      if (matched.length > 0) {
+        // Try to extract a <title> for display
+        let title = "";
+        try {
+          const doc = new DOMParser().parseFromString(text, "text/html");
+          title = (doc.querySelector("title")?.textContent || "").trim();
+        } catch {}
+
+        results.push({
+          path,
+          title,
+          matches: matched
+        });
+      }
+    } catch (err) {
+      console.warn("Search: failed to fetch", path, err);
+    }
+  }
+
+  return results;
+}
+
+// --- Wire up your existing form ---
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector('.search-wrap form.search');
+  const input = form?.querySelector('input[name="q"]');
+  const resultsEl = document.getElementById("search-results");
+
+  if (!form || !input || !resultsEl) return;
+
+  // Submit handler
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const query = input.value || "";
+    resultsEl.setAttribute("aria-busy", "true");
+    const results = await searchMeta(query);
+    renderResults(resultsEl, query, results);
+    resultsEl.removeAttribute("aria-busy");
+  });
+
+  // Live search as you type (debounced)
+  const debounced = debounce(async () => {
+    const query = input.value || "";
+    resultsEl.setAttribute("aria-busy", "true");
+    const results = await searchMeta(query);
+    renderResults(resultsEl, query, results);
+    resultsEl.removeAttribute("aria-busy");
+  }, 300);
+
+  input.addEventListener("input", debounced);
+});
+
+
 
   </script>
 </body>
 </html>
+
 
 
