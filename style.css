@@ -357,14 +357,16 @@ ul.breadcrumb li a:hover {
 	color: #212b4f;
 	}
 
-.content-ol {
-  list-style: decimal outside;   /* show 1., 2., 3. … */
-  padding-left: 1.5rem;          /* room for the numbers */
-  margin: 1em 0;                 /* typical list margins */
+
+.main .content-ol {
+  list-style-type: decimal;       /* show 1., 2., 3. */
+  list-style-position: outside;   /* markers in the gutter (default look) */
+  margin: 1em 0;                  /* typical list margins */
+  padding-left: 1.5rem;           /* room for the numbers */
 }
 
-.content-ol > li {
-  display: list-item;            /* undo any inline list-item rules */
+.main .content-ol > li {
+  display: list-item;             /* defeat any inline/flex list item rules */
 }
 
 
